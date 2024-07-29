@@ -53,7 +53,7 @@ function displayWeather(data, locationInput, unitInput, icon, img) {
     const humidity = document.querySelector('.humidity');
 
     content.style.backgroundImage = `url('./img/${img}')`;
-    conditions.style.display = 'block';
+    conditions.style.display = 'flex';
     address.textContent = locationInput;
     weatherSvg.innerHTML = icon;
     weather.textContent = data.weather;
@@ -88,7 +88,7 @@ function getIconAndBgImg(cloudcover, precip) {
 
     if (cloudcover <= 33) {
         img = 'sunny.jpg';
-    } else if (cloudcover < 33 && cloudcover <= 66) {
+    } else if (cloudcover > 33 && cloudcover <= 66) {
         img = 'suncloudy.jpg';
     } else if (cloudcover > 66) {
         img = 'cloudy.jpg';
