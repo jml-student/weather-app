@@ -1,25 +1,24 @@
 async function getApiData(location, unit) {
-    let errorMessage = '';
     try {
         let response = await fetch(
             `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=${unit}&key=Q5RFQXKFWUN3LADSR2DWBKFTH&contentType=json`
         );
 
         if (!response.ok) {
+            if (response.status === 404) {
+                document.querySelector('.conditions').style.display = 'none';
+                document.querySelector('.message').textContent =
+                    'Location not found';
+                return null;
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        if (response.status === 404) {
-            errorMessage = 'Location not found';
-            document.querySelector('.message').textContent = errorMessage;
-            return null;
         }
 
         let data = await response.json();
         console.log(data);
         return data;
     } catch (error) {
-        console.error('Error fetching data: ', error);
+        console.error('Error fetching data:', error);
         return null;
     }
 }
@@ -41,7 +40,7 @@ function displayWeather(data, locationInput, unitInput, icon, img) {
     document.getElementById('location').value = '';
     document.querySelector('.message').textContent = '';
 
-    const content = document.querySelector('.content');
+    const content = document.querySelector('.content-container');
     const conditions = document.querySelector('.conditions');
     const address = document.querySelector('.address');
     const weatherSvg = document.querySelector('.weather-svg');
