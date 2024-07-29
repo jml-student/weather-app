@@ -88,8 +88,8 @@ function getIconAndBgImg(cloudcover, precip) {
 
     if (cloudcover < 33) {
         img = 'sunny.jpg';
-    } else if (33 < cloudcover < 66) {
-        img = 'sunny-cloud.jpg';
+    } else if (cloudcover < 33 && cloudcover < 66) {
+        img = 'suncloudy.jpg';
     } else if (cloudcover > 66) {
         img = 'cloudy.jpg';
     }
