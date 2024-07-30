@@ -1,4 +1,5 @@
 async function getApiData(location, unit) {
+    const message = document.querySelector('.message');
     try {
         let response = await fetch(
             `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=${unit}&key=Q5RFQXKFWUN3LADSR2DWBKFTH&contentType=json`
@@ -7,9 +8,9 @@ async function getApiData(location, unit) {
         if (!response.ok) {
             if (response.status === 404) {
                 document.querySelector('.conditions').style.display = 'none';
-                document.querySelector('.message').textContent =
-                    'Location not found';
-                return null;
+                throw new Error(
+                    `Location not found. Please enter a valid location. ${response.status}`
+                );
             }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -19,6 +20,8 @@ async function getApiData(location, unit) {
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
+        message.textContent = `${error}`;
+        message.style.color = 'red';
         return null;
     }
 }
@@ -38,7 +41,7 @@ async function filterData(data) {
 
 function displayWeather(data, locationInput, unitInput, icon, img) {
     document.getElementById('location').value = '';
-    document.querySelector('.message').textContent = '';
+    document.querySelector('.message').innerHTML = '';
 
     const content = document.querySelector('.content-container');
     const conditions = document.querySelector('.conditions');
@@ -101,6 +104,14 @@ document
     .getElementById('weatherForm')
     .addEventListener('submit', async function (event) {
         event.preventDefault();
+
+        let message = document.querySelector('.message');
+        message.innerHTML = '';
+        message.style.color = '';
+
+        let loadingCircle = document.createElement('div');
+        loadingCircle.className = 'loading';
+        message.appendChild(loadingCircle);
 
         let location = document.getElementById('location').value;
         let unitInput = document.getElementById('unit-select').value;
